@@ -13,12 +13,15 @@ import { Label } from "@/components/ui/label";
 import { supabase } from "@/app/supabase";
 import { useRouter } from "next/navigation";
 import SignInForm from "../signinform/page";
+import CalendarHeatmap from "react-calendar-heatmap";
+import "react-calendar-heatmap/dist/styles.css";
 
 export default function Dashboard() {
   const router = useRouter();
   const [userInfo, setUserInfo] = useState<any>(null);
   const [loading, setLoading] = useState(true);
   const [isNewUser, setIsNewUser] = useState(false);
+  const [workoutData, setWorkoutData] = useState<any[]>([]);
 
   useEffect(() => {
     const fetchUserProfile = async () => {
@@ -48,7 +51,7 @@ export default function Dashboard() {
 
       const isNewUserCheck =
         new Date().getTime() - new Date(user.created_at).getTime() <
-        3 * 60 * 1000; //
+        3 * 60 * 1000;
       const isProfileIncomplete =
         !profile.username ||
         !profile.height ||
@@ -58,6 +61,23 @@ export default function Dashboard() {
 
       setIsNewUser(isNewUserCheck || isProfileIncomplete);
       setLoading(false);
+
+      const { data: workoutEntries, error: workoutError } = await supabase
+        .from("workout_entries")
+        .select("date, workout")
+        .eq("user_id", user.id);
+
+      if (workoutError) {
+        console.error("Error fetching workout entries:", workoutError);
+        return;
+      }
+
+      const mappedWorkoutData = workoutEntries.map((entry: any) => ({
+        date: entry.date,
+        count: entry.workout,
+      }));
+
+      setWorkoutData(mappedWorkoutData);
     };
 
     fetchUserProfile();
@@ -122,6 +142,19 @@ export default function Dashboard() {
           <Button>Edit</Button>
         </CardFooter>
       </Card>
+      <div className="absolute right-12 w-[60vw] h-[50vh]">
+        <CalendarHeatmap
+          startDate={new Date("2024-01-01")}
+          endDate={new Date("2024-12-31")}
+          values={workoutData}
+          classForValue={(value) => {
+            if (!value) {
+              return "color-empty";
+            }
+            return value.count > 0 ? "color-filled" : "color-empty";
+          }}
+        />
+      </div>
     </div>
   );
 }
