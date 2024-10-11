@@ -17,6 +17,7 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
+import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { supabase } from "@/app/supabase";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
@@ -76,20 +77,28 @@ export default function SignInForm() {
       const payload = {
         name: data.name,
         username: data.username,
-        height: data.height ?? null, // send null instead of undefined
-        weight: data.weight ?? null, // send null instead of undefined
-        age: data.age ?? null, // send null instead of undefined
-        gender: data.gender ?? null, // send null instead of undefined
-        bmi: bmi ?? null, // calculate and set bmi, or null if bmi is invalid
+        height: data.height ?? null,
+        weight: data.weight ?? null,
+        age: data.age ?? null,
+        gender: data.gender ?? null,
+        bmi: bmi ?? null,
       };
 
-      const { error } = await supabase.from("profiles").upsert(payload);
+      if (payload) {
+        console.log(payload);
+        console.log("payload");
+      } else {
+        console.log("no payload");
+      }
+      const { error } = await supabase
+        .from("profiles")
+        .update(payload)
+        .eq("id", userData.user.id);
 
       if (error) {
         throw error;
       }
-
-      router.push("/dashboard");
+      window.location.reload();
     } catch (error: any) {
       toast({
         title: "Error",
@@ -129,7 +138,7 @@ export default function SignInForm() {
                 <FormItem>
                   <FormLabel>Username</FormLabel>
                   <FormControl>
-                    <Input placeholder="shadcn" {...field} />
+                    <Input placeholder="johndoe" {...field} />
                   </FormControl>
                   <FormDescription>
                     This is your public display name.
@@ -202,49 +211,28 @@ export default function SignInForm() {
                 <FormItem>
                   <FormLabel>Gender</FormLabel>
                   <FormControl>
-                    <div className="flex items-center space-x-4">
-                      <div className="flex items-center">
-                        <Checkbox
-                          id="male"
-                          value="M"
-                          checked={field.value === "M"}
-                          onChange={() =>
-                            field.onChange(
-                              field.value === "M" ? undefined : "M"
-                            )
-                          }
-                        />
-                        <Label htmlFor="male">Male</Label>
+                    <RadioGroup
+                      defaultValue="Prefer not to mention"
+                      onValueChange={(value) => field.onChange(value)}
+                    >
+                      <div className="flex items-center space-x-4">
+                        <div className="flex items-center space-x-2">
+                          <RadioGroupItem value="M" id="r1" />
+                          <Label htmlFor="r1">Male</Label>
+                        </div>
+                        <div className="flex items-center space-x-2">
+                          <RadioGroupItem value="F" id="r2" />
+                          <Label htmlFor="r2">Female</Label>
+                        </div>
+                        <div className="flex items-center space-x-2">
+                          <RadioGroupItem
+                            value="Prefer not to mention"
+                            id="r3"
+                          />
+                          <Label htmlFor="r3">Prefer not to mention</Label>
+                        </div>
                       </div>
-                      <div className="flex items-center">
-                        <Checkbox
-                          id="female"
-                          value="F"
-                          checked={field.value === "F"}
-                          onChange={() =>
-                            field.onChange(
-                              field.value === "F" ? undefined : "F"
-                            )
-                          }
-                        />
-                        <Label htmlFor="female">Female</Label>
-                      </div>
-                      <div className="flex items-center">
-                        <Checkbox
-                          id="other"
-                          value="Prefer not to mention"
-                          checked={field.value === "Prefer not to mention"}
-                          onChange={() =>
-                            field.onChange(
-                              field.value === "Prefer not to mention"
-                                ? undefined
-                                : "Prefer not to mention"
-                            )
-                          }
-                        />
-                        <Label htmlFor="other">Prefer not to mention</Label>
-                      </div>
-                    </div>
+                    </RadioGroup>
                   </FormControl>
                   <FormMessage />
                 </FormItem>

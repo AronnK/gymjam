@@ -32,7 +32,6 @@ export default function Dashboard() {
         return;
       }
 
-      // Fetch the user's profile
       const { data: profile, error: profileError } = await supabase
         .from("profiles")
         .select("*")
@@ -47,10 +46,9 @@ export default function Dashboard() {
 
       setUserInfo(profile);
 
-      // Logic to check if the user is a new user
       const isNewUserCheck =
         new Date().getTime() - new Date(user.created_at).getTime() <
-        3 * 60 * 1000; // Check if the account was created within the last 3 minutes
+        3 * 60 * 1000; //
       const isProfileIncomplete =
         !profile.username ||
         !profile.height ||
