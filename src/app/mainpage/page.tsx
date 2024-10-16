@@ -1,6 +1,5 @@
 "use client";
-import { useState } from "react";
-import { useUser } from "@/context/UserContext";
+import { useState, useEffect } from "react";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Label } from "@/components/ui/label";
 import {
@@ -12,16 +11,30 @@ import {
 } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { supabase } from "../supabase";
+import { createClient } from "@/utils/supabase/client";
 
 export default function MainPage() {
-  const { userInfo } = useUser();
+  const supabase = createClient();
   const [workoutSelected, setWorkoutSelected] = useState<string | null>(null);
   const [workoutCardVisible, setWorkoutCardVisible] = useState(false);
   const [inputFields, setInputFields] = useState<string[]>([]);
   const [updatedCardVisible, setUpdatedCardVisible] = useState(false);
   const [updatedCardMessage, setUpdatedCardMessage] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
+  const [userInfo, setUserInfo] = useState<any>(null);
+
+  useEffect(() => {
+    const fetchUserInfo = async () => {
+      const { data: userData, error } = await supabase.auth.getUser();
+      if (error) {
+        console.error("Error fetching user info:", error);
+      } else {
+        setUserInfo(userData.user);
+      }
+    };
+
+    fetchUserInfo();
+  }, [supabase]);
 
   const handleSubmit = async () => {
     if (!userInfo) return;
