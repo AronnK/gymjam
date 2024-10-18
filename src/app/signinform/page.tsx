@@ -17,8 +17,8 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
-import { supabase } from "@/app/supabase";
-import { useRouter } from "next/navigation";
+import { createClient } from "@/utils/supabase/client";
+import { redirect, useRouter } from "next/navigation";
 import { useState } from "react";
 
 const FormSchema = z.object({
@@ -42,6 +42,7 @@ const FormSchema = z.object({
 
 export default function SignInForm() {
   const router = useRouter();
+  const supabase = createClient();
   const form = useForm<z.infer<typeof FormSchema>>({
     resolver: zodResolver(FormSchema),
     defaultValues: {
