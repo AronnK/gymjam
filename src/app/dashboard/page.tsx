@@ -23,15 +23,15 @@ export default async function Dashboard() {
   } = await supabase.auth.getUser();
 
   if (!user) {
-    return redirect("/sign-in");
+    return redirect("/login");
   }
   const { data: profiles, error } = await supabase
     .from("profiles")
     .select("name, username, height, weight, age, bmi, gender")
-    .eq("id", user.id)
+    .eq("id", user?.id)
     .single();
-  if (error || !profiles) {
-    return redirect("/sign-in");
+  if (error) {
+    return <SignInForm />;
   }
 
   const { name, username, height, weight, age, bmi, gender } = profiles;

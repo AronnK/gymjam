@@ -4,7 +4,6 @@ import { SubmitButton } from "@/components/submit-button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import Link from "next/link";
-import { SmtpMessage } from "../smtp-message";
 
 export default function ForgotPassword({
   searchParams,
@@ -18,7 +17,7 @@ export default function ForgotPassword({
           <h1 className="text-2xl font-medium">Reset Password</h1>
           <p className="text-sm text-secondary-foreground">
             Already have an account?{" "}
-            <Link className="text-primary underline" href="/sign-in">
+            <Link className="text-primary underline" href="/login">
               Sign in
             </Link>
           </p>
@@ -32,7 +31,6 @@ export default function ForgotPassword({
           <FormMessage message={searchParams} />
         </div>
       </form>
-      <SmtpMessage />
     </>
   );
 }

@@ -25,7 +25,7 @@ export const signUpAction = async (formData: FormData) => {
 
   if (error) {
     console.error(error.code + " " + error.message);
-    return encodedRedirect("error", "/sign-up", error.message);
+    return encodedRedirect("error", "/login", error.message);
   } else {
     return encodedRedirect(
       "success",
@@ -47,7 +47,7 @@ export const signInAction = async (formData: FormData) => {
 
   if (error) {
     console.log(error)
-    return encodedRedirect("error", "/sign-in", error.message);
+    return encodedRedirect("error", "/login", error.message);
   }
 
   return redirect("/dashboard");
@@ -127,5 +127,5 @@ export const resetPasswordAction = async (formData: FormData) => {
 export const signOutAction = async () => {
   const supabase = createClient();
   await supabase.auth.signOut();
-  return redirect("/sign-in");
+  return redirect("login");
 };
