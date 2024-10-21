@@ -4,7 +4,6 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { Label } from "@/components/ui/label";
-import { toast } from "@/hooks/use-toast";
 import { Button } from "@/components/ui/button";
 import {
   Form,
@@ -18,7 +17,6 @@ import {
 import { Input } from "@/components/ui/input";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { createClient } from "@/utils/supabase/client";
-import { redirect, useRouter } from "next/navigation";
 import { useState } from "react";
 
 const FormSchema = z.object({
@@ -41,7 +39,6 @@ const FormSchema = z.object({
 });
 
 export default function SignInForm() {
-  const router = useRouter();
   const supabase = createClient();
   const form = useForm<z.infer<typeof FormSchema>>({
     resolver: zodResolver(FormSchema),
@@ -99,12 +96,12 @@ export default function SignInForm() {
         throw error;
       }
       window.location.reload();
-    } catch (error: any) {
-      toast({
-        title: "Error",
-        description:
-          error.message || "An error occurred while updating the profile.",
-      });
+    } catch (error: unknown) {
+      let errorMessage = "An error occurred while updating the profile.";
+      if (error instanceof Error) {
+        errorMessage = error.message;
+      }
+      console.log(errorMessage);
     } finally {
       setLoading(false);
     }
