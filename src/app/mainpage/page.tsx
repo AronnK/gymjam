@@ -13,6 +13,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { supabase } from "../supabase";
+import Link from "next/link";
 
 export default function MainPage() {
   const { userInfo } = useUser();
@@ -60,7 +61,7 @@ export default function MainPage() {
 
     const { error } = await supabase.from("workout_entries").insert([
       {
-        user_id: userInfo.id,
+        user_id: userInfo?.id,
         date: today,
         workout: true,
         workout_details: inputFields,
@@ -114,7 +115,7 @@ export default function MainPage() {
         <div className="flex justify-center items-center min-h-screen">
           <Card className="w-auto h-auto p-10">
             <CardHeader>
-              <CardTitle>Add today's workout</CardTitle>
+              <CardTitle>Add today&apos;s workout</CardTitle>
             </CardHeader>
             <CardContent>
               {errorMessage && (
@@ -166,6 +167,11 @@ export default function MainPage() {
           </Card>
         </div>
       )}
+      <div className="absolute bottom-4 left-4">
+        <Link href="/dashboard" passHref>
+          <Button>Dashboard</Button>
+        </Link>
+      </div>
     </div>
   );
 }
