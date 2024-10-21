@@ -6,11 +6,11 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
+// import { Input } from "@/components/ui/input";
+// import { Label } from "@/components/ui/label";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { signInAction, signUpAction } from "@/app/actions";
-import Link from "next/link";
+// import { signInAction, signUpAction } from "@/app/actions";
+// import Link from "next/link";
 import { SubmitButton } from "@/components/submit-button";
 import { useRouter } from "next/navigation";
 import { createClient } from "@/utils/supabase/client";
@@ -51,7 +51,7 @@ export default function Login() {
               </CardDescription>
             </CardHeader>
             <CardContent className="space-y-2">
-              <form
+              {/* <form
                 className="flex flex-col gap-4"
                 action={signInAction}
                 method="POST"
@@ -83,7 +83,7 @@ export default function Login() {
                   Forgot Password?
                 </Link>
                 <SubmitButton pendingText="Signing In...">Sign In</SubmitButton>
-              </form>
+              </form> */}
 
               <div className="flex items-center my-4">
                 <div className="flex-grow h-px bg-gray-300"></div>
@@ -107,7 +107,7 @@ export default function Login() {
               </CardDescription>
             </CardHeader>
             <CardContent className="space-y-2">
-              <form
+              {/* <form
                 className="flex flex-col gap-4"
                 action={signUpAction}
                 method="POST"
@@ -134,7 +134,7 @@ export default function Login() {
                   />
                 </div>
                 <SubmitButton pendingText="Signing Up...">Sign Up</SubmitButton>
-              </form>
+              </form> */}
 
               <div className="flex items-center my-4">
                 <div className="flex-grow h-px bg-gray-300"></div>
