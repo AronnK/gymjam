@@ -7,7 +7,7 @@ import {
 
 export default function AchievementsCard() {
   return (
-    <div className="pt-5 pl-5 w-[20vw]">
+    <div className=" pl-5 w-[20vw]">
       <Card className="h-[54vh]">
         <CardHeader>
           <p>Achievements</p>

@@ -8,7 +8,7 @@ interface UserCardProps {
 
 export default function UserCard({ name, username, jams }: UserCardProps) {
   return (
-    <div className="absolute pt-5 pl-5 w-[20vw]">
+    <div className="pt-14 pl-5 w-[20vw] ">
       <Card>
         <CardHeader>
           <p>{name}</p>

@@ -64,7 +64,7 @@ export default function Add() {
         user_id: userInfo?.id,
         date: today,
         workout: true,
-        workout_details: workoutName,
+        workout_name: workoutName,
       })
       .select();
 
@@ -117,7 +117,7 @@ export default function Add() {
         user_id: userInfo?.id,
         date: today,
         workout: true,
-        workout_details: workoutName,
+        workout_name: workoutName,
       })
       .select();
 
@@ -150,109 +150,111 @@ export default function Add() {
   };
 
   return (
-    <div className="bg-slate-500 flex justify-center p-2">
-      <Dialog open={isOpen} onOpenChange={setIsOpen}>
-        {!submitted ? (
-          <DialogTrigger asChild>
-            <Button onClick={() => setIsOpen(true)}>
-              Did you do workout today?
+    <div className="fixed bottom-0 left-0 right-0 bg-slate-500 p-3 z-50">
+      <div className="flex justify-center">
+        <Dialog open={isOpen} onOpenChange={setIsOpen}>
+          {!submitted ? (
+            <DialogTrigger asChild>
+              <Button onClick={() => setIsOpen(true)}>
+                Did you do workout today?
+              </Button>
+            </DialogTrigger>
+          ) : (
+            <Button className="cursor-not-allowed">
+              {workoutSelected === "no"
+                ? "No workouts today😔"
+                : "Workout done for today😎"}
             </Button>
-          </DialogTrigger>
-        ) : (
-          <Button className="cursor-not-allowed">
-            {workoutSelected === "no"
-              ? "No workouts today😔"
-              : "Workout done for today😎"}
-          </Button>
-        )}
-
-        <DialogContent>
-          <DialogHeader>
-            <DialogTitle>Did you workout today?</DialogTitle>
-          </DialogHeader>
-
-          {workoutSelected === null && (
-            <div className="space-y-2">
-              <div>
-                <Checkbox
-                  id="yes"
-                  onCheckedChange={() => setWorkoutSelected("yes")}
-                />
-                <label htmlFor="yes" className="ml-2">
-                  Yes
-                </label>
-              </div>
-              <div>
-                <Checkbox
-                  id="no"
-                  onCheckedChange={() => setWorkoutSelected("no")}
-                />
-                <label htmlFor="no" className="ml-2">
-                  No
-                </label>
-              </div>
-            </div>
           )}
-          {workoutSelected === "yes" && (
-            <div className="space-y-4">
-              <h2>Add Today&apos;s Workout</h2>
-              <Input
-                placeholder="Workout Name"
-                value={workoutName}
-                onChange={(e) => setWorkoutName(e.target.value)}
-              />
-              <Input
-                placeholder="Number of sets"
-                value={sets}
-                onChange={(e) => setSets(restrictToNumbers(e.target.value))}
-              />
-              <Input
-                placeholder="Weights for each set (comma-separated)"
-                value={weights}
-                onChange={(e) =>
-                  setWeights(restrictToNumbersAndCommas(e.target.value))
-                }
-              />
-              <Input
-                placeholder="Reps for each set (comma-separated)"
-                value={reps}
-                onChange={(e) =>
-                  setReps(restrictToNumbersAndCommas(e.target.value))
-                }
-              />
 
-              <div className="flex justify-between">
-                <Button
-                  variant="outline"
-                  onClick={() => setWorkoutSelected(null)}
-                >
-                  Back
-                </Button>
-                <div className="flex justify-end space-x-2">
-                  <Button onClick={handleAddWorkoutField}>Add More</Button>
-                  <Button onClick={handleWorkoutSubmit}>
-                    {canSubmit ? "Submit" : "Skip"}
-                  </Button>
+          <DialogContent>
+            <DialogHeader>
+              <DialogTitle>Did you workout today?</DialogTitle>
+            </DialogHeader>
+
+            {workoutSelected === null && (
+              <div className="space-y-2">
+                <div>
+                  <Checkbox
+                    id="yes"
+                    onCheckedChange={() => setWorkoutSelected("yes")}
+                  />
+                  <label htmlFor="yes" className="ml-2">
+                    Yes
+                  </label>
+                </div>
+                <div>
+                  <Checkbox
+                    id="no"
+                    onCheckedChange={() => setWorkoutSelected("no")}
+                  />
+                  <label htmlFor="no" className="ml-2">
+                    No
+                  </label>
                 </div>
               </div>
-            </div>
-          )}
+            )}
+            {workoutSelected === "yes" && (
+              <div className="space-y-4">
+                <h2>Add Today&apos;s Workout</h2>
+                <Input
+                  placeholder="Workout Name"
+                  value={workoutName}
+                  onChange={(e) => setWorkoutName(e.target.value)}
+                />
+                <Input
+                  placeholder="Number of sets"
+                  value={sets}
+                  onChange={(e) => setSets(restrictToNumbers(e.target.value))}
+                />
+                <Input
+                  placeholder="Weights for each set (comma-separated)"
+                  value={weights}
+                  onChange={(e) =>
+                    setWeights(restrictToNumbersAndCommas(e.target.value))
+                  }
+                />
+                <Input
+                  placeholder="Reps for each set (comma-separated)"
+                  value={reps}
+                  onChange={(e) =>
+                    setReps(restrictToNumbersAndCommas(e.target.value))
+                  }
+                />
 
-          {workoutSelected === "no" && (
-            <div className="space-y-4">
-              <div className="flex justify-end space-x-2">
-                <Button
-                  variant="outline"
-                  onClick={() => setWorkoutSelected(null)}
-                >
-                  Back
-                </Button>
-                <Button onClick={handleWorkoutSubmit}>Submit</Button>
+                <div className="flex justify-between">
+                  <Button
+                    variant="outline"
+                    onClick={() => setWorkoutSelected(null)}
+                  >
+                    Back
+                  </Button>
+                  <div className="flex justify-end space-x-2">
+                    <Button onClick={handleAddWorkoutField}>Add More</Button>
+                    <Button onClick={handleWorkoutSubmit}>
+                      {canSubmit ? "Submit" : "Skip"}
+                    </Button>
+                  </div>
+                </div>
               </div>
-            </div>
-          )}
-        </DialogContent>
-      </Dialog>
+            )}
+
+            {workoutSelected === "no" && (
+              <div className="space-y-4">
+                <div className="flex justify-end space-x-2">
+                  <Button
+                    variant="outline"
+                    onClick={() => setWorkoutSelected(null)}
+                  >
+                    Back
+                  </Button>
+                  <Button onClick={handleWorkoutSubmit}>Submit</Button>
+                </div>
+              </div>
+            )}
+          </DialogContent>
+        </Dialog>
+      </div>
     </div>
   );
 }
