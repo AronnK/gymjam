@@ -84,13 +84,6 @@ export default function Login() {
                 </Link>
                 <SubmitButton pendingText="Signing In...">Sign In</SubmitButton>
               </form> */}
-
-              <div className="flex items-center my-4">
-                <div className="flex-grow h-px bg-gray-300"></div>
-                <span className="px-4 text-gray-500">or</span>
-                <div className="flex-grow h-px bg-gray-300"></div>
-              </div>
-
               <SubmitButton className="w-full" onClick={handleSignInWithGoogle}>
                 Login with Google
               </SubmitButton>

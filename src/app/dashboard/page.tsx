@@ -15,6 +15,7 @@ import "react-calendar-heatmap/dist/styles.css";
 import Calendar from "./calender";
 import { signOutAction } from "../actions";
 import Link from "next/link";
+import FuturePlan, { FuturePlanEntry } from "../dash/futuretable";
 
 interface WorkoutEntry {
   date: string;
@@ -55,6 +56,34 @@ export default async function Dashboard() {
     console.error("Error fetching workout entries:", workoutError);
     return;
   }
+  const { data: futurePlans, error: futureError } = await supabase
+    .from("future_entries")
+    .select("id, workout_name, sets, weights, reps, date")
+    .eq("user_id", user.id)
+    .order("date", { ascending: true });
+
+  if (futureError) {
+    console.error("Error fetching future plans:", futureError);
+    return;
+  }
+
+  const futurePlanData: FuturePlanEntry[] = futurePlans.map(
+    (plan: {
+      id: number;
+      workout_name: string;
+      sets: number;
+      weights: number[];
+      reps: number[];
+      date: string;
+    }) => ({
+      id: plan.id,
+      workout: plan.workout_name,
+      sets: plan.sets,
+      weights: plan.weights.join(","),
+      reps: plan.reps.join(","),
+      date: plan.date,
+    })
+  );
 
   const workoutData =
     workoutEntries?.map((entry: WorkoutEntry) => ({
@@ -121,6 +150,7 @@ export default async function Dashboard() {
           </CardFooter>
         </Card>
         <Calendar workoutData={workoutData} />
+        <FuturePlan futurePlans={futurePlanData} />
       </div>
     </div>
   );
