@@ -48,14 +48,23 @@ export default async function Dash() {
     return;
   }
 
-  const futurePlanData: FuturePlanEntry[] = futurePlans.map((plan: any) => ({
-    id: plan.id,
-    workout: plan.workout_name,
-    sets: plan.sets,
-    weights: (plan.weights || []).join(","),
-    reps: (plan.reps || []).join(","),
-    date: plan.date,
-  }));
+  const futurePlanData: FuturePlanEntry[] = futurePlans.map(
+    (plan: {
+      id: number;
+      workout_name: string;
+      sets: number;
+      weights: number[];
+      reps: number[];
+      date: string;
+    }) => ({
+      id: plan.id,
+      workout: plan.workout_name,
+      sets: plan.sets,
+      weights: plan.weights.join(","),
+      reps: plan.reps.join(","),
+      date: plan.date,
+    })
+  );
 
   const { data: workoutEntries, error: workoutError } = await supabase
     .from("workout_entries")
@@ -69,7 +78,7 @@ export default async function Dash() {
   }
 
   const workoutHistory: WorkoutHistoryEntry[] = await Promise.all(
-    workoutEntries.map(async (entry: any) => {
+    workoutEntries.map(async (entry: { id: number; date: string }) => {
       const { data: workoutDetails, error: detailsError } = await supabase
         .from("workout_details")
         .select("workout_name, sets, weights, reps")
