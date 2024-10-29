@@ -2,7 +2,7 @@
 import {
   Card,
   CardContent,
-  CardDescription,
+  // CardDescription,
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
@@ -22,7 +22,7 @@ export default function Login() {
     const { error } = await supabase.auth.signInWithOAuth({
       provider: "google",
       options: {
-        redirectTo: "/dashboard",
+        redirectTo: "/dash",
       },
     });
 
@@ -30,7 +30,7 @@ export default function Login() {
       console.error("Error logging in:", error.message);
       return { error: error.message };
     } else {
-      router.push("/dashboard");
+      router.push("/dash");
     }
   };
 
@@ -46,9 +46,9 @@ export default function Login() {
           <Card>
             <CardHeader>
               <CardTitle>Sign In</CardTitle>
-              <CardDescription>
+              {/* <CardDescription>
                 Enter your credentials to access your account.
-              </CardDescription>
+              </CardDescription> */}
             </CardHeader>
             <CardContent className="space-y-2">
               {/* <form
@@ -102,9 +102,9 @@ export default function Login() {
           <Card>
             <CardHeader>
               <CardTitle>Sign Up</CardTitle>
-              <CardDescription>
+              {/* <CardDescription>
                 Create a new account by filling in the details below.
-              </CardDescription>
+              </CardDescription> */}
             </CardHeader>
             <CardContent className="space-y-2">
               {/* <form
@@ -136,11 +136,11 @@ export default function Login() {
                 <SubmitButton pendingText="Signing Up...">Sign Up</SubmitButton>
               </form> */}
 
-              <div className="flex items-center my-4">
+              {/* <div className="flex items-center my-4">
                 <div className="flex-grow h-px bg-gray-300"></div>
                 <span className="px-4 text-gray-500">or</span>
                 <div className="flex-grow h-px bg-gray-300"></div>
-              </div>
+              </div> */}
 
               <SubmitButton className="w-full" onClick={handleSignInWithGoogle}>
                 Sign Up with Google
