@@ -19,7 +19,7 @@ export default function Add() {
   );
   const [submitted, setSubmitted] = useState<boolean>(false);
   const [workoutName, setWorkoutName] = useState<string>("");
-  const [sets, setSets] = useState<string>(""); // Now accepting a single integer as string
+  const [sets, setSets] = useState<string>("");
   const [weights, setWeights] = useState<string>("");
   const [reps, setReps] = useState<string>("");
   const { userInfo } = useUser();
@@ -38,7 +38,7 @@ export default function Add() {
   }, [workoutName, sets, weights, reps]);
 
   const restrictToNumbers = (value: string) => {
-    return value.replace(/[^0-9]/g, ""); // Restrict to integer input only
+    return value.replace(/[^0-9]/g, "");
   };
 
   const restrictToNumbersAndCommas = (value: string) => {
@@ -46,7 +46,7 @@ export default function Add() {
   };
 
   const handleAddWorkoutField = async () => {
-    const parsedSets = parseInt(sets, 10); // Convert sets to an integer
+    const parsedSets = parseInt(sets, 10);
     const parsedWeights = weights.split(",").map(Number);
     const parsedReps = reps.split(",").map(Number);
 
@@ -57,14 +57,12 @@ export default function Add() {
 
     const today = new Date().toISOString().split("T")[0];
 
-    // Insert or update workout entry
     const { data: workoutEntry, error: entryError } = await supabase
       .from("workout_entries")
       .upsert({
         user_id: userInfo?.id,
         date: today,
         workout: true,
-        workout_name: workoutName,
       })
       .select();
 
@@ -75,12 +73,12 @@ export default function Add() {
 
     const workoutEntryId = workoutEntry[0].id;
 
-    // Insert workout details
     const { error: detailsError } = await supabase
       .from("workout_details")
       .insert([
         {
           workout_id: workoutEntryId,
+          workout_name: workoutName || null,
           sets: parsedSets || null,
           weights: parsedWeights || null,
           reps: parsedReps || null,
@@ -92,7 +90,6 @@ export default function Add() {
       return;
     }
 
-    // Clear input fields for the next entry
     setWorkoutName("");
     setSets("");
     setWeights("");
@@ -101,7 +98,7 @@ export default function Add() {
 
   const handleWorkoutSubmit = async () => {
     const today = new Date().toISOString().split("T")[0];
-    const parsedSets = parseInt(sets, 10); // Convert sets to an integer
+    const parsedSets = parseInt(sets, 10);
     const parsedWeights = weights.split(",").map(Number);
     const parsedReps = reps.split(",").map(Number);
 
@@ -110,14 +107,12 @@ export default function Add() {
       return;
     }
 
-    // Insert or update workout entry
     const { data: workoutEntry, error: entryError } = await supabase
       .from("workout_entries")
       .upsert({
         user_id: userInfo?.id,
         date: today,
         workout: true,
-        workout_name: workoutName,
       })
       .select();
 
@@ -128,12 +123,12 @@ export default function Add() {
 
     const workoutEntryId = workoutEntry[0].id;
 
-    // Insert workout details
     const { error: detailsError } = await supabase
       .from("workout_details")
       .insert([
         {
           workout_id: workoutEntryId,
+          workout_name: workoutName || null,
           sets: parsedSets || null,
           weights: parsedWeights || null,
           reps: parsedReps || null,

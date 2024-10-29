@@ -7,6 +7,7 @@ import Add from "./add";
 import UserCard from "./usercard";
 import AchievementsCard from "./achievements";
 import WorkoutHistory, { WorkoutHistoryEntry } from "./workouthistory";
+import FuturePlan, { FuturePlanEntry } from "./futuretable";
 
 export default async function Dash() {
   const supabase = createClient();
@@ -36,9 +37,29 @@ export default async function Dash() {
     return <SignInForm />;
   }
 
+  const { data: futurePlans, error: futureError } = await supabase
+    .from("future_entries")
+    .select("id, workout_name, sets, weights, reps, date")
+    .eq("user_id", user.id)
+    .order("date", { ascending: true });
+
+  if (futureError) {
+    console.error("Error fetching future plans:", futureError);
+    return;
+  }
+
+  const futurePlanData: FuturePlanEntry[] = futurePlans.map((plan: any) => ({
+    id: plan.id,
+    workout: plan.workout_name,
+    sets: plan.sets,
+    weights: (plan.weights || []).join(","),
+    reps: (plan.reps || []).join(","),
+    date: plan.date,
+  }));
+
   const { data: workoutEntries, error: workoutError } = await supabase
     .from("workout_entries")
-    .select("id, workout_name, date")
+    .select("id, date")
     .eq("user_id", user.id)
     .order("date", { ascending: false });
 
@@ -51,7 +72,7 @@ export default async function Dash() {
     workoutEntries.map(async (entry: any) => {
       const { data: workoutDetails, error: detailsError } = await supabase
         .from("workout_details")
-        .select("sets, weights, reps")
+        .select("workout_name, sets, weights, reps")
         .eq("workout_id", entry.id)
         .single();
 
@@ -62,7 +83,7 @@ export default async function Dash() {
         );
         return {
           id: entry.id,
-          workout: entry.workout_name,
+          workout: "None",
           sets: [],
           weights: [],
           reps: [],
@@ -72,7 +93,7 @@ export default async function Dash() {
 
       return {
         id: entry.id,
-        workout: entry.workout_name,
+        workout: workoutDetails?.workout_name,
         sets: workoutDetails?.sets || [],
         weights: (workoutDetails?.weights || []).join(","),
         reps: (workoutDetails?.reps || []).join(","),
@@ -99,8 +120,14 @@ export default async function Dash() {
         <div className="col-span-2 row-span-2 h-[calc(100vh-30vh-6rem)]">
           <AchievementsCard />
         </div>
-        <div className="col-span-3 row-span-2 h-[calc(100vh-30vh-6rem)]">
-          <WorkoutHistory workoutHistory={workoutHistory} />
+
+        <div className="col-span-3 h-[calc(100vh-30vh-6rem)] grid grid-cols-2 gap-4">
+          <div className="col-span-1">
+            <WorkoutHistory workoutHistory={workoutHistory} />
+          </div>
+          <div className="col-span-1">
+            <FuturePlan futurePlans={futurePlanData} />
+          </div>
         </div>
       </main>
       <Add />
